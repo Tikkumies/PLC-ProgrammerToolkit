@@ -86,7 +86,7 @@ class Window(QWidget):
                 ipaddress.ip_address(gateway)
 
             elif mode == "dhcp":
-                command = "@echo off\n" + "netsh interface ip set dns " + name + " dhcp"
+                command = "@echo off\n" + "netsh interface ip set address " + name + " dhcp"
 
             with open ("Scripts\ChangeIP.bat", "w") as bat_file:
                 bat_file.write(command)
