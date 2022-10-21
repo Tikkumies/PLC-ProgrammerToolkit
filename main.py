@@ -2,7 +2,7 @@ import sys
 import subprocess
 import ipaddress
 import os
-from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget, QLineEdit, QLabel) 
+from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout) 
 
 
 GLOBAL_STYLE = """
@@ -19,10 +19,11 @@ GLOBAL_STYLE = """
     """
 
 class Window(QWidget):
-    def __init__(self):
+    def __init__(self, diag):
+        self.diag = diag
         """MainWindow constructor"""
         super().__init__()
-        self.setWindowTitle("IP changer")
+        self.setWindowTitle("IP Changer")
         self.setFixedSize(250,300)
 
         self.create_widget_objects()
@@ -80,13 +81,33 @@ class Window(QWidget):
                 bat_file.write("@echo off\n" + "netsh interface ip set address " + name + " static " + ip + " " + mask + " " + gateway)
             subprocess.run("Scripts\ChangeIP.bat")
         except ValueError:
+            self.diag.show()
             print("Please enter valid IP address, Subnet mask, and Default gateway")
+
+class Dialog(QDialog):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Incorrect network settings")
+
+        QBtn = QDialogButtonBox.Ok
+
+        self.buttonBox = QDialogButtonBox(QBtn)
+        self.buttonBox.accepted.connect(self.accept)
+
+        self.layout = QVBoxLayout()
+        message = QLabel("Incorrect IP address, network mask or default gateway")
+        self.layout.addWidget(message)
+        self.layout.addWidget(self.buttonBox)
+        self.setLayout(self.layout)
 
 if __name__ == '__main__':
     my_path = os.path.abspath(os.path.dirname(__file__))
     app = QApplication(sys.argv)
     app.setStyleSheet(GLOBAL_STYLE)
-    window = Window()
+    dialog = Dialog()
+    window = Window(dialog)
+
     window.show()
     sys.exit(app.exec_())
 
