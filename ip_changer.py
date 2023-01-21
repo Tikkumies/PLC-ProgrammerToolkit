@@ -25,35 +25,38 @@ class Window(QWidget):
         self.diag = diag
         super().__init__()
         self.setWindowTitle("IP Changer")
-        self.setFixedSize(250,300)
+        self.setFixedSize(250,350)
 
         self.create_widget_objects()
         self.layout_methods()
 
         self.button_change_static.clicked.connect(lambda: self.change_ip("static"))
         self.button_change_dhcp.clicked.connect(lambda: self.change_ip("dhcp"))
+        self.button_get_current_ip.clicked.connect(lambda: self.update_fields())
 
     # Creates widget objects   
     def create_widget_objects(self):
         self.Label_name = QLabel("Network name")
         self.qcombo_name = QComboBox(self)
-        adapters = self.get_network_adapter_names()
+        adapters = self.get_network_adapter_data("name")
         for adapter in adapters:
             self.qcombo_name.addItem(adapter)
 
 
         self.Label_ip = QLabel("IP address")
-        self.qline_ip = QLineEdit("10.0.0.223")
+        self.qline_ip = QLineEdit(self.get_network_adapter_data("ip")[self.qcombo_name.currentIndex()])
 
         self.Label_mask = QLabel("Subnet mask")
-        self.qline_mask = QLineEdit("255.255.255.0")
+        self.qline_mask = QLineEdit(self.get_network_adapter_data("mask")[self.qcombo_name.currentIndex()])
 
         self.Label_gateway = QLabel("Default gateway")
-        self.qline_gateway = QLineEdit("0.0.0.0")
+        self.qline_gateway = QLineEdit(self.get_network_adapter_data("gateway")[self.qcombo_name.currentIndex()])
 
         self.button_change_static = QPushButton("Set static IP")
 
         self.button_change_dhcp = QPushButton("Set to DHCP")
+
+        self.button_get_current_ip = QPushButton("Get current IP")
 
     # layout related stuff
     def layout_methods(self):
@@ -73,27 +76,47 @@ class Window(QWidget):
 
         self.layout.addWidget(self.button_change_static,8,0)
 
-        self.layout.addWidget(self.button_change_dhcp,9,0)        
+        self.layout.addWidget(self.button_change_dhcp,9,0)  
 
-        self.setLayout(self.layout)   
+        self.layout.addWidget(self.button_get_current_ip,10,0) 
+        self.setLayout(self.layout) 
 
-    def get_network_adapter_names(self):
+    def update_fields(self):
+        self.qline_ip.setText(self.get_network_adapter_data("ip")[self.qcombo_name.currentIndex()]) 
+        self.qline_mask.setText(self.get_network_adapter_data("mask")[self.qcombo_name.currentIndex()])
+        self.qline_gateway.setText(self.get_network_adapter_data("gateway")[self.qcombo_name.currentIndex()])
+
+    def get_network_adapter_data(self, data):
+        match data:
+            case "name":
+                find_start = "Ethernet adapter "
+                find_end = ":"
+            case "ip":
+                find_start = "IPv4 Address. . . . . . . . . . . : "
+                find_end = " "
+            case "mask":
+                find_start = "Subnet Mask . . . . . . . . . . . : "
+                find_end = " "
+            case "gateway":
+                find_start = "Default Gateway . . . . . . . . . : "
+                find_end = " "
+            case "all":
+                pass
+
         command = "ipconfig"
         completed_process = (subprocess.run(command, capture_output=True))
-        string = str(completed_process.stdout)
-        print(string)
+        string = str(completed_process.stdout).replace("\\n"," ").replace("\\r", " ")
         adapter_list = []
         x = True
         while x == True:
-            start = string.find("Ethernet adapter ") + len("Ethernet adapter ")
-            end = string.find(":",start)
+            start = string.find(find_start) + len(find_start)
+            end = string.find(find_end, start)
 
-            if string.find("Ethernet adapter") == -1:
+            if string.find(find_start) == -1:
                 x = False
             else:
                 adapter_list.append(string[start:end])
                 string = string[end:]
-
         print(adapter_list)
         return (adapter_list)
 
