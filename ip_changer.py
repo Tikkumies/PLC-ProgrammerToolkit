@@ -80,18 +80,16 @@ class Window(QWidget):
         command = ""
         try:
             if mode == "static":
-                command = "@echo off\n" + "netsh interface ip set address " + name + " static " + ip + " " + mask + " " + gateway
+                command =  "netsh interface ip set address " + name + " static " + ip + " " + mask + " " + gateway
+                # Check for valid IP address
                 ipaddress.ip_address(ip)
                 ipaddress.ip_address(mask)
                 ipaddress.ip_address(gateway)
 
             elif mode == "dhcp":
-                command = "@echo off\n" + "netsh interface ip set address " + name + " dhcp"
+                command = "netsh interface ip set address " + name + " dhcp"
 
-            with open ("ChangeIP.bat", "w") as bat_file:
-                bat_file.write(command)
-
-            subprocess.run("ChangeIP.bat")
+            subprocess.run(command)
 
         except ValueError:
             self.diag.show()
