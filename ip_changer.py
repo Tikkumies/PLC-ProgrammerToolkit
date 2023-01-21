@@ -2,8 +2,7 @@ import sys
 import subprocess
 import ipaddress
 import os
-from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout) 
-
+from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox) 
 
 GLOBAL_STYLE = """
     QPushButton {
@@ -14,6 +13,9 @@ GLOBAL_STYLE = """
         font-size: 16px;
         }
     QLineEdit{
+        font-size: 16px;
+    }
+        QComboBox{
         font-size: 16px;
     }
     """
@@ -34,7 +36,11 @@ class Window(QWidget):
     # Creates widget objects   
     def create_widget_objects(self):
         self.Label_name = QLabel("Network name")
-        self.qline_name = QLineEdit("Ethernet")
+        self.qcombo_name = QComboBox(self)
+        adapters = self.get_network_adapter_names()
+        for adapter in adapters:
+            self.qcombo_name.addItem(adapter)
+
 
         self.Label_ip = QLabel("IP address")
         self.qline_ip = QLineEdit("10.0.0.223")
@@ -54,7 +60,7 @@ class Window(QWidget):
         self.layout = QGridLayout()
 
         self.layout.addWidget(self.Label_name,0,0)
-        self.layout.addWidget(self.qline_name,1,0)
+        self.layout.addWidget(self.qcombo_name,1,0)
 
         self.layout.addWidget(self.Label_ip,2,0)  
         self.layout.addWidget(self.qline_ip,3,0)  
@@ -71,13 +77,34 @@ class Window(QWidget):
 
         self.setLayout(self.layout)   
 
+    def get_network_adapter_names(self):
+        command = "ipconfig"
+        completed_process = (subprocess.run(command, capture_output=True))
+        string = str(completed_process.stdout)
+        print(string)
+        adapter_list = []
+        x = True
+        while x == True:
+            start = string.find("Ethernet adapter ") + len("Ethernet adapter ")
+            end = string.find(":",start)
+
+            if string.find("Ethernet adapter") == -1:
+                x = False
+            else:
+                adapter_list.append(string[start:end])
+                string = string[end:]
+
+        print(adapter_list)
+        return (adapter_list)
+
     # Changes network adapter settings
     def change_ip(self, mode):
-        name = self.qline_name.text()
+        name = self.qcombo_name.currentText()
         ip = self.qline_ip.text()
         mask = self.qline_mask.text()
         gateway = self.qline_gateway.text()
         command = ""
+
         try:
             if mode == "static":
                 command =  "netsh interface ip set address " + name + " static " + ip + " " + mask + " " + gateway
@@ -90,6 +117,7 @@ class Window(QWidget):
                 command = "netsh interface ip set address " + name + " dhcp"
 
             subprocess.run(command)
+
 
         except ValueError:
             self.diag.show()
