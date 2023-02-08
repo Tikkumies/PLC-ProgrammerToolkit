@@ -214,7 +214,7 @@ class HandleJson:
 
 
 if __name__ == '__main__':
-    my_path = os.path.abspath(os.path.dirname(__file__))
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     app = QApplication(sys.argv)
     app.setStyleSheet(GLOBAL_STYLE)
     dialog = Dialog()
