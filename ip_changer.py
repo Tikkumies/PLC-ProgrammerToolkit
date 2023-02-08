@@ -4,6 +4,7 @@ import ipaddress
 import os
 import json
 from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox) 
+from PyQt5.QtGui import QIcon
 
 GLOBAL_STYLE = """
     QPushButton {
@@ -25,6 +26,7 @@ class Window(QWidget):
     def __init__(self, diag):
         self.diag = diag
         super().__init__()
+        self.setWindowIcon(QIcon("ip.PNG"))
         self.setWindowTitle("IP Changer")
         self.setFixedSize(250,400)
         self.create_widget_objects()
@@ -175,8 +177,6 @@ class Window(QWidget):
             data[self.qcombo_preset.currentIndex()].update({"Gateway": self.qline_gateway.text()})
 
             HandleJson.write_json("file.json", data)
-
-            print(data)
 
         except:
             self.diag.show()
