@@ -22,29 +22,33 @@ GLOBAL_STYLE = """
     """
 
 class Window(QWidget):
-    def __init__(self, diag, preset_editor):
+    def __init__(self, diag):
         self.diag = diag
-        self.preset_editor = preset_editor
         super().__init__()
         self.setWindowTitle("IP Changer")
         self.setFixedSize(250,400)
-
         self.create_widget_objects()
+        self.change_field_texts()
         self.create_layout()
 
         self.button_change_static.clicked.connect(lambda: self.change_ip("static"))
         self.button_change_dhcp.clicked.connect(lambda: self.change_ip("dhcp"))
         self.button_get_current_ip.clicked.connect(lambda: self.update_fields_to_current())
-        self.button_edit_presets.clicked.connect(lambda: self.open_preset_editor())
+        self.qcombo_preset.currentTextChanged.connect(lambda: self.change_field_texts())
+        self.button_save_presets.clicked.connect(lambda: self.update_json_file())
 
     # Creates widget objects   
     def create_widget_objects(self):
+        self.Label_preset = QLabel("Preset")
+        self.qcombo_preset = QComboBox(self)
+        for preset_number in range(1,6): 
+            self.qcombo_preset.addItem("Preset " + str(preset_number))
+
         self.Label_name = QLabel("Network name")
         self.qcombo_name = QComboBox(self)
         adapters = self.get_network_adapter_data("name")
         for adapter in adapters:
             self.qcombo_name.addItem(adapter)
-
 
         self.Label_ip = QLabel("IP address")
         self.qline_ip = QLineEdit(self.get_network_adapter_data("ip")[self.qcombo_name.currentIndex()])
@@ -61,28 +65,31 @@ class Window(QWidget):
 
         self.button_get_current_ip = QPushButton("Get current IP")
 
-        self.button_edit_presets = QPushButton("Edit Presets")
+        self.button_save_presets = QPushButton("Save Preset")
 
     # layout related stuff
     def create_layout(self):
         self.layout = QGridLayout()
 
-        self.layout.addWidget(self.Label_name,0,0)
-        self.layout.addWidget(self.qcombo_name,1,0)
+        self.layout.addWidget(self.Label_preset,0,0)
+        self.layout.addWidget(self.qcombo_preset,1,0)
 
-        self.layout.addWidget(self.Label_ip,2,0)  
-        self.layout.addWidget(self.qline_ip,3,0)  
+        self.layout.addWidget(self.Label_name,2,0)
+        self.layout.addWidget(self.qcombo_name,3,0)
 
-        self.layout.addWidget(self.Label_mask,4,0)
-        self.layout.addWidget(self.qline_mask,5,0)
+        self.layout.addWidget(self.Label_ip,4,0)  
+        self.layout.addWidget(self.qline_ip,5,0)  
 
-        self.layout.addWidget(self.Label_gateway,6,0)
-        self.layout.addWidget(self.qline_gateway,7,0)
+        self.layout.addWidget(self.Label_mask,6,0)
+        self.layout.addWidget(self.qline_mask,7,0)
 
-        self.layout.addWidget(self.button_change_static,8,0)
-        self.layout.addWidget(self.button_change_dhcp,9,0)  
-        self.layout.addWidget(self.button_get_current_ip,10,0) 
-        self.layout.addWidget(self.button_edit_presets)
+        self.layout.addWidget(self.Label_gateway,8,0)
+        self.layout.addWidget(self.qline_gateway,9,0)
+
+        self.layout.addWidget(self.button_change_static,10,0)
+        self.layout.addWidget(self.button_change_dhcp,11,0)  
+        self.layout.addWidget(self.button_get_current_ip,12,0) 
+        self.layout.addWidget(self.button_save_presets,13,0 )
 
         self.setLayout(self.layout) 
 
@@ -148,9 +155,31 @@ class Window(QWidget):
         except ValueError:
             self.diag.show()
 
-    # Open preset editor
-    def open_preset_editor(self):
-        preset_editor.show()
+    def change_field_texts(self):
+        data = HandleJson.read_json("file.json")
+
+        self.qline_ip.setText(data[self.qcombo_preset.currentIndex()].get("IP"))
+        self.qline_mask.setText(data[self.qcombo_preset.currentIndex()].get("Mask"))
+        self.qline_gateway.setText(data[self.qcombo_preset.currentIndex()].get("Gateway"))
+
+    def update_json_file(self):
+        try:
+            ipaddress.ip_address(self.qline_ip.text())
+            ipaddress.ip_address(self.qline_mask.text())
+            ipaddress.ip_address(self.qline_gateway.text())
+
+            data = HandleJson.read_json("file.json")
+
+            data[self.qcombo_preset.currentIndex()].update({"IP": self.qline_ip.text()})
+            data[self.qcombo_preset.currentIndex()].update({"Mask": self.qline_mask.text()})
+            data[self.qcombo_preset.currentIndex()].update({"Gateway": self.qline_gateway.text()})
+
+            HandleJson.write_json("file.json", data)
+
+            print(data)
+
+        except:
+            self.diag.show()
 
 
 class Dialog(QDialog):
@@ -170,88 +199,26 @@ class Dialog(QDialog):
         self.layout.addWidget(self.buttonBox)
         self.setLayout(self.layout)
 
-class PresetEditor(QWidget):
-    def __init__(self, diag):
-        super().__init__()
-        self.diag = diag
-        self.setWindowTitle("Preset editor")
-        self.setFixedSize(500,110)
-        self.create_widgets()
-        self.create_layout()
 
-        self.button_save.clicked.connect(lambda: self.update_json_file())
-        self.combo_preset.currentTextChanged.connect(lambda: self.change_edit_field_texts())
-
-    def create_widgets(self):
-        self.label_preset = QLabel("Preset")
-        self.combo_preset = QComboBox()
-        for preset_number in range(1,6): 
-            self.combo_preset.addItem("Preset " + str(preset_number))
-
-        self.label_ip = QLabel("IP address")
-        self.qline_ip = QLineEdit()
-
-        self.Label_mask = QLabel("Subnet mask")
-        self.qline_mask = QLineEdit()
-
-        self.Label_gateway = QLabel("Default gateway")
-        self.qline_gateway = QLineEdit()
-
-        self.button_save = QPushButton("Save Presets")
-
-    def create_layout(self):
-        self.layout = QGridLayout()
-        self.layout.addWidget(self.label_preset, 0, 0)
-        self.layout.addWidget(self.label_ip, 0, 1)
-        self.layout.addWidget(self.Label_mask, 0, 2)
-        self.layout.addWidget(self.Label_gateway, 0, 3)
-
-        self.layout.addWidget(self.combo_preset, 1, 0)
-        self.layout.addWidget(self.qline_ip, 1, 1)
-        self.layout.addWidget(self.qline_mask, 1, 2)
-        self.layout.addWidget(self.qline_gateway, 1, 3)
-
-        self.layout.addWidget(self.button_save, 2, 0)
-
-        self.setLayout(self.layout)
-
-    def update_json_file(self):
-        try:
-            ipaddress.ip_address(self.qline_ip.text())
-            ipaddress.ip_address(self.qline_mask.text())
-            ipaddress.ip_address(self.qline_gateway.text())
-
-            with open("file.json", "r") as read:
-                data = (json.load(read))
-
-            data[self.combo_preset.currentIndex()].update({"IP": self.qline_ip.text()})
-            data[self.combo_preset.currentIndex()].update({"Mask": self.qline_mask.text()})
-            data[self.combo_preset.currentIndex()].update({"Gateway": self.qline_gateway.text()})
-
-            with open("file.json", "w") as write:
-                json.dump(data, write)
-
-            print(data)
-
-        except:
-            self.diag.show()
-
-    def change_edit_field_texts(self):
-        with open("file.json", "r") as read:
+class HandleJson:
+    @staticmethod
+    def read_json(file):
+        with open(file, "r") as read:
             data = (json.load(read))
+        return data
 
-        self.qline_ip.setText(data[self.combo_preset.currentIndex()].get("IP"))
-        self.qline_mask.setText(data[self.combo_preset.currentIndex()].get("Mask"))
-        self.qline_gateway.setText(data[self.combo_preset.currentIndex()].get("Gateway"))
+    @staticmethod
+    def write_json(file, data):
+        with open(file, "w") as write:
+            json.dump(data, write)
+
 
 if __name__ == '__main__':
     my_path = os.path.abspath(os.path.dirname(__file__))
     app = QApplication(sys.argv)
     app.setStyleSheet(GLOBAL_STYLE)
     dialog = Dialog()
-    preset_editor = PresetEditor(dialog)
-    window = Window(dialog, preset_editor)
-
+    window = Window(dialog)
     window.show()
     sys.exit(app.exec_())
 
