@@ -3,6 +3,7 @@ import subprocess
 import ipaddress
 import os
 import json
+import pathlib
 from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox) 
 from PyQt5.QtGui import QIcon
 
@@ -21,6 +22,7 @@ GLOBAL_STYLE = """
         font-size: 16px;
     }
     """
+
 
 class Window(QWidget):
     def __init__(self, diag):
@@ -214,7 +216,6 @@ class HandleJson:
 
 
 if __name__ == '__main__':
-    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     app = QApplication(sys.argv)
     app.setStyleSheet(GLOBAL_STYLE)
     dialog = Dialog()
