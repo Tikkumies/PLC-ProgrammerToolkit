@@ -3,6 +3,7 @@ import ipaddress
 from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget,
                              QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox)
 from PyQt5.QtGui import QIcon
+import os
 from resources.styles import styles
 from resources.utils.handle_json import read_json, write_json
 from resources.utils.handle_ip import change_ip, get_network_adapter_data
@@ -145,6 +146,9 @@ class Dialog(QDialog):
 
 
 if __name__ == '__main__':
+    # Path for pyintaller
+    if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+        os.chdir(sys._MEIPASS)
     app = QApplication(sys.argv)
     app.setStyleSheet(styles.GLOBAL_STYLE)
     dialog = Dialog()
