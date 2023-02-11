@@ -1,36 +1,67 @@
 import sys 
 import subprocess
 import ipaddress
-import os
 import json
-import pathlib
 from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox) 
 from PyQt5.QtGui import QIcon
+
 
 GLOBAL_STYLE = """
     QPushButton {
         font-size: 16px;
         text-align:center;
+        border-radius: 5;
+        border: 1px;
+        background-color: #404040;
+        color: #FFFFFF;
+        padding: 5px;
         }
+
     QLabel {
         font-size: 16px;
+        border: 1px;
+        background-color: #121212;
+        color: #FFFFFF;
         }
+        
     QLineEdit{
         font-size: 16px;
+        border-radius: 5;
+        border: 1px;
+        background-color: #404040;
+        color: #FFFFFF;
+        padding: 5px;
+
     }
-        QComboBox{
+    QComboBox{
         font-size: 16px;
+        border-radius: 5;
+        border: 1px;
+        background-color: #404040;
+        color: #FFFFFF;
+        padding: 5px;
+        }
+
+    QComboBox QAbstractItemView {
+        background-color: #404040;
+        color: #FFFFFF;
+        selection-background-color: #282828;
+    }
+
+
+    QWidget#myParentWidget{
+        background-color: #121212;
     }
     """
-
+    
 
 class Window(QWidget):
     def __init__(self, diag):
         self.diag = diag
         super().__init__()
         self.setWindowIcon(QIcon("ip.PNG"))
+        self.setObjectName("myParentWidget")
         self.setWindowTitle("IP Changer")
-        self.setFixedSize(250,400)
         self.create_widget_objects()
         self.change_field_texts()
         self.create_layout()
@@ -187,8 +218,9 @@ class Window(QWidget):
 class Dialog(QDialog):
     def __init__(self):
         super().__init__()
-
+        self.setObjectName("myParentWidget")
         self.setWindowTitle("Incorrect network settings")
+        self.setWindowIcon(QIcon("ip.PNG"))
 
         QBtn = QDialogButtonBox.Ok
 
