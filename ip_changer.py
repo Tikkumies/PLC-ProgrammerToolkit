@@ -48,7 +48,6 @@ GLOBAL_STYLE = """
         selection-background-color: #282828;
     }
 
-
     QWidget#myParentWidget{
         background-color: #121212;
     }
@@ -59,7 +58,7 @@ class Window(QWidget):
     def __init__(self, diag):
         self.diag = diag
         super().__init__()
-        self.setWindowIcon(QIcon("ip.PNG"))
+        self.setWindowIcon(QIcon("resources/images/ip.PNG"))
         self.setObjectName("myParentWidget")
         self.setWindowTitle("IP Changer")
         self.create_widget_objects()
@@ -191,7 +190,7 @@ class Window(QWidget):
             self.diag.show()
 
     def change_field_texts(self):
-        data = HandleJson.read_json("file.json")
+        data = HandleJson.read_json("resources/file.json")
 
         self.qline_ip.setText(data[self.qcombo_preset.currentIndex()].get("IP"))
         self.qline_mask.setText(data[self.qcombo_preset.currentIndex()].get("Mask"))
@@ -203,13 +202,13 @@ class Window(QWidget):
             ipaddress.ip_address(self.qline_mask.text())
             ipaddress.ip_address(self.qline_gateway.text())
 
-            data = HandleJson.read_json("file.json")
+            data = HandleJson.read_json("resources/file.json")
 
             data[self.qcombo_preset.currentIndex()].update({"IP": self.qline_ip.text()})
             data[self.qcombo_preset.currentIndex()].update({"Mask": self.qline_mask.text()})
             data[self.qcombo_preset.currentIndex()].update({"Gateway": self.qline_gateway.text()})
 
-            HandleJson.write_json("file.json", data)
+            HandleJson.write_json("resources/file.json", data)
 
         except:
             self.diag.show()
