@@ -1,11 +1,13 @@
 import ipaddress
 import subprocess
 
+
 def change_ip(mode, name="", ip="", mask="", gateway="", diag_window=""):
     command = ""
     try:
         if mode == "static":
-            command =  "netsh interface ip set address " + name + " static " + ip + " " + mask + " " + gateway
+            command = "netsh interface ip set address " + name + \
+                " static " + ip + " " + mask + " " + gateway
             # Check for valid IP address
             ipaddress.ip_address(ip)
             ipaddress.ip_address(mask)
@@ -18,6 +20,7 @@ def change_ip(mode, name="", ip="", mask="", gateway="", diag_window=""):
 
     except ValueError:
         diag_window.show()
+
 
 def get_network_adapter_data(data):
     match data:
@@ -38,7 +41,8 @@ def get_network_adapter_data(data):
 
     command = "ipconfig"
     completed_process = (subprocess.run(command, capture_output=True))
-    string = str(completed_process.stdout).replace("\\n"," ").replace("\\r", " ")
+    string = str(completed_process.stdout).replace(
+        "\\n", " ").replace("\\r", " ")
     adapter_list = []
     x = True
     while x == True:

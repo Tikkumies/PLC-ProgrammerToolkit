@@ -1,9 +1,11 @@
 import json
 
+
 def read_json(file):
     with open(file, "r") as read:
         data = (json.load(read))
     return data
+
 
 @staticmethod
 def write_json(file, data):
