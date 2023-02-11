@@ -1,57 +1,10 @@
 import sys 
 import subprocess
 import ipaddress
-import json
 from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox) 
 from PyQt5.QtGui import QIcon
-
-
-GLOBAL_STYLE = """
-    QPushButton {
-        font-size: 16px;
-        text-align:center;
-        border-radius: 5;
-        border: 1px;
-        background-color: #404040;
-        color: #FFFFFF;
-        padding: 5px;
-        }
-
-    QLabel {
-        font-size: 16px;
-        border: 1px;
-        background-color: #121212;
-        color: #FFFFFF;
-        }
-        
-    QLineEdit{
-        font-size: 16px;
-        border-radius: 5;
-        border: 1px;
-        background-color: #404040;
-        color: #FFFFFF;
-        padding: 5px;
-
-    }
-    QComboBox{
-        font-size: 16px;
-        border-radius: 5;
-        border: 1px;
-        background-color: #404040;
-        color: #FFFFFF;
-        padding: 5px;
-        }
-
-    QComboBox QAbstractItemView {
-        background-color: #404040;
-        color: #FFFFFF;
-        selection-background-color: #282828;
-    }
-
-    QWidget#myParentWidget{
-        background-color: #121212;
-    }
-    """
+from resources.styles import styles
+from resources.utils.handle_json import HandleJson
     
 
 class Window(QWidget):
@@ -233,22 +186,9 @@ class Dialog(QDialog):
         self.setLayout(self.layout)
 
 
-class HandleJson:
-    @staticmethod
-    def read_json(file):
-        with open(file, "r") as read:
-            data = (json.load(read))
-        return data
-
-    @staticmethod
-    def write_json(file, data):
-        with open(file, "w") as write:
-            json.dump(data, write)
-
-
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    app.setStyleSheet(GLOBAL_STYLE)
+    app.setStyleSheet(styles.GLOBAL_STYLE)
     dialog = Dialog()
     window = Window(dialog)
     window.show()
