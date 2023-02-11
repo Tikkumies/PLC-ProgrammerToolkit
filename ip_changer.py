@@ -4,8 +4,8 @@ import ipaddress
 from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget, QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox) 
 from PyQt5.QtGui import QIcon
 from resources.styles import styles
-from resources.utils.handle_json import HandleJson
-    
+from resources.utils.handle_json import read_json, write_json
+from resources.utils.handle_ip import change_ip, get_network_adapter_data
 
 class Window(QWidget):
     def __init__(self, diag):
@@ -18,8 +18,9 @@ class Window(QWidget):
         self.change_field_texts()
         self.create_layout()
 
-        self.button_change_static.clicked.connect(lambda: self.change_ip("static"))
-        self.button_change_dhcp.clicked.connect(lambda: self.change_ip("dhcp"))
+        self.button_change_static.clicked.connect(lambda: change_ip ("static", self.qcombo_name.currentText(), self.qline_ip.text(),
+                                                                    self.qline_mask.text(), self.qline_gateway.text(),self.diag))
+        self.button_change_dhcp.clicked.connect(lambda: change_ip("dhcp", self.qcombo_name.currentText()) )
         self.button_get_current_ip.clicked.connect(lambda: self.update_fields_to_current())
         self.qcombo_preset.currentTextChanged.connect(lambda: self.change_field_texts())
         self.button_save_presets.clicked.connect(lambda: self.update_json_file())
@@ -33,25 +34,22 @@ class Window(QWidget):
 
         self.Label_name = QLabel("Network name")
         self.qcombo_name = QComboBox(self)
-        adapters = self.get_network_adapter_data("name")
+        adapters = get_network_adapter_data("name")
         for adapter in adapters:
             self.qcombo_name.addItem(adapter)
 
         self.Label_ip = QLabel("IP address")
-        self.qline_ip = QLineEdit(self.get_network_adapter_data("ip")[self.qcombo_name.currentIndex()])
+        self.qline_ip = QLineEdit(get_network_adapter_data("ip")[self.qcombo_name.currentIndex()])
 
         self.Label_mask = QLabel("Subnet mask")
-        self.qline_mask = QLineEdit(self.get_network_adapter_data("mask")[self.qcombo_name.currentIndex()])
+        self.qline_mask = QLineEdit(get_network_adapter_data("mask")[self.qcombo_name.currentIndex()])
 
         self.Label_gateway = QLabel("Default gateway")
-        self.qline_gateway = QLineEdit(self.get_network_adapter_data("gateway")[self.qcombo_name.currentIndex()])
+        self.qline_gateway = QLineEdit(get_network_adapter_data("gateway")[self.qcombo_name.currentIndex()])
 
         self.button_change_static = QPushButton("Set static IP")
-
         self.button_change_dhcp = QPushButton("Set to DHCP")
-
         self.button_get_current_ip = QPushButton("Get current IP")
-
         self.button_save_presets = QPushButton("Save Preset")
 
     # layout related stuff
@@ -85,66 +83,8 @@ class Window(QWidget):
         self.qline_mask.setText(self.get_network_adapter_data("mask")[self.qcombo_name.currentIndex()])
         self.qline_gateway.setText(self.get_network_adapter_data("gateway")[self.qcombo_name.currentIndex()])
 
-    def get_network_adapter_data(self, data):
-        match data:
-            case "name":
-                find_start = "Ethernet adapter "
-                find_end = ":"
-            case "ip":
-                find_start = "IPv4 Address. . . . . . . . . . . : "
-                find_end = " "
-            case "mask":
-                find_start = "Subnet Mask . . . . . . . . . . . : "
-                find_end = " "
-            case "gateway":
-                find_start = "Default Gateway . . . . . . . . . : "
-                find_end = " "
-            case "all":
-                pass
-
-        command = "ipconfig"
-        completed_process = (subprocess.run(command, capture_output=True))
-        string = str(completed_process.stdout).replace("\\n"," ").replace("\\r", " ")
-        adapter_list = []
-        x = True
-        while x == True:
-            start = string.find(find_start) + len(find_start)
-            end = string.find(find_end, start)
-
-            if string.find(find_start) == -1:
-                x = False
-            else:
-                adapter_list.append(string[start:end])
-                string = string[end:]
-        return (adapter_list)
-
-    # Changes network adapter settings
-    def change_ip(self, mode):
-        name = self.qcombo_name.currentText()
-        ip = self.qline_ip.text()
-        mask = self.qline_mask.text()
-        gateway = self.qline_gateway.text()
-        command = ""
-
-        try:
-            if mode == "static":
-                command =  "netsh interface ip set address " + name + " static " + ip + " " + mask + " " + gateway
-                # Check for valid IP address
-                ipaddress.ip_address(ip)
-                ipaddress.ip_address(mask)
-                ipaddress.ip_address(gateway)
-
-            elif mode == "dhcp":
-                command = "netsh interface ip set address " + name + " dhcp"
-
-            subprocess.run(command)
-
-        except ValueError:
-            self.diag.show()
-
     def change_field_texts(self):
-        data = HandleJson.read_json("resources/file.json")
-
+        data = read_json("resources/file.json")
         self.qline_ip.setText(data[self.qcombo_preset.currentIndex()].get("IP"))
         self.qline_mask.setText(data[self.qcombo_preset.currentIndex()].get("Mask"))
         self.qline_gateway.setText(data[self.qcombo_preset.currentIndex()].get("Gateway"))
@@ -155,13 +95,13 @@ class Window(QWidget):
             ipaddress.ip_address(self.qline_mask.text())
             ipaddress.ip_address(self.qline_gateway.text())
 
-            data = HandleJson.read_json("resources/file.json")
+            data = read_json("resources/file.json")
 
             data[self.qcombo_preset.currentIndex()].update({"IP": self.qline_ip.text()})
             data[self.qcombo_preset.currentIndex()].update({"Mask": self.qline_mask.text()})
             data[self.qcombo_preset.currentIndex()].update({"Gateway": self.qline_gateway.text()})
 
-            HandleJson.write_json("resources/file.json", data)
+            write_json("resources/file.json", data)
 
         except:
             self.diag.show()
@@ -193,4 +133,3 @@ if __name__ == '__main__':
     window = Window(dialog)
     window.show()
     sys.exit(app.exec_())
-
