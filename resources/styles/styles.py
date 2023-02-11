@@ -9,6 +9,16 @@ GLOBAL_STYLE = """
         padding: 5px;
         }
 
+    QPushButton:pressed {
+        background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1,
+                                        stop: 0 #B2B2B2, stop: 1 #B2B2B2);
+    }
+
+        QPushButton:hover:!pressed
+    {
+    background-color: #181818; 
+    }
+
     QLabel {
         font-size: 16px;
         border: 1px;
@@ -45,4 +55,3 @@ GLOBAL_STYLE = """
         background-color: #121212;
     }
     """
-    
