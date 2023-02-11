@@ -1,5 +1,4 @@
 import sys
-import subprocess
 import ipaddress
 from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget,
                              QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox)
@@ -88,11 +87,11 @@ class Window(QWidget):
         self.setLayout(self.layout)
 
     def update_fields_to_current(self):
-        self.qline_ip.setText(self.get_network_adapter_data("ip")[
+        self.qline_ip.setText(get_network_adapter_data("ip")[
                               self.qcombo_name.currentIndex()])
-        self.qline_mask.setText(self.get_network_adapter_data("mask")[
+        self.qline_mask.setText(get_network_adapter_data("mask")[
                                 self.qcombo_name.currentIndex()])
-        self.qline_gateway.setText(self.get_network_adapter_data("gateway")[
+        self.qline_gateway.setText(get_network_adapter_data("gateway")[
                                    self.qcombo_name.currentIndex()])
 
     def change_field_texts(self):
