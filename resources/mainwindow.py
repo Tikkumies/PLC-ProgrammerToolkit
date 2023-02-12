@@ -26,12 +26,12 @@ class MainWindow(QMainWindow):
         file_menu.addAction(self.action_test_view)
         # signals
         self.action_ip_view.triggered.connect(self.open_ip_changer)
-        self.action_test_view.triggered.connect(self.open_test)
+        self.action_test_view.triggered.connect(self.open_delta_conversion)
 
     def open_ip_changer(self):
         self.stacked_widget.setCurrentIndex(0)
         self.setWindowTitle("IP changer")
 
-    def open_test(self):
+    def open_delta_conversion(self):
         self.stacked_widget.setCurrentIndex(1)
         self.setWindowTitle("Delta conversion")
