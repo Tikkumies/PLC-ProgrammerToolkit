@@ -54,4 +54,9 @@ GLOBAL_STYLE = """
     QWidget#myParentWidget{
         background-color: #121212;
     }
+    QMenuBar {
+        background-color: #404040;
+        color: #FFFFFF;
+        font-size: 16px;
+    }
     """
