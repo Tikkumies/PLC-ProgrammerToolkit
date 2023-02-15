@@ -19,23 +19,23 @@ class DeltaWindow(QWidget):
         self.label_title = QLabel("Give motor nameplate values")
 
         self.Label_rpm = QLabel("Motor nameplate rpm")
-        self.qline_rpm = QLineEdit("1756")
+        self.qline_rpm = QLineEdit("")
         # self.qcombo_rpm.setValidator(self.real_number_validator)
 
-        self.Label_power = QLabel("Motor nameplate power")
-        self.qline_power = QLineEdit("3")
+        self.Label_power = QLabel("Motor nameplate power (kW)")
+        self.qline_power = QLineEdit("")
         # self.qline_power.setValidator(self.real_number_validator)
 
         self.Label_amps = QLabel("Motor nameplate amps")
-        self.qline_amps = QLineEdit("5")
+        self.qline_amps = QLineEdit("")
         # self.qline_amps.setValidator(self.real_number_validator)
 
         self.Label_frequency = QLabel("Motor nameplate frequency")
-        self.qline_frequency = QLineEdit("50")
+        self.qline_frequency = QLineEdit("")
         # self.qline_frequency.setValidator(self.real_number_validator)
 
         self.Label_poles = QLabel("Number of poles pairs")
-        self.qline_poles = QLineEdit("2")
+        self.qline_poles = QLineEdit("")
         # self.qline_poles.setValidator(self.real_number_validator)
 
         self.Label_rpm_result = QLabel("")
