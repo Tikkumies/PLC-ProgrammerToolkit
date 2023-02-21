@@ -1,5 +1,5 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QGridLayout
-from PyQt5.QtGui import QDoubleValidator
+from PyQt5.QtGui import QDoubleValidator, QIntValidator
 from .utils.calculate_delta_values import CaclulateDeltaValues
 
 
@@ -7,8 +7,6 @@ class DeltaWindow(QWidget):
     def __init__(self):
         super().__init__()
         self.setObjectName("myParentWidget")
-        self.real_number_validator = QDoubleValidator()
-        self.real_number_validator.setRange(0, 1000000)
         self.create_widget_objects()
         self.create_layout()
 
@@ -20,23 +18,33 @@ class DeltaWindow(QWidget):
 
         self.Label_rpm = QLabel("Motor nameplate rpm")
         self.qline_rpm = QLineEdit("")
-        # self.qcombo_rpm.setValidator(self.real_number_validator)
+        self.rpm_validator = QIntValidator(self.qline_rpm)
+        self.rpm_validator.setRange(0, 10000)
+        self.qline_rpm.setValidator(self.rpm_validator)
 
         self.Label_power = QLabel("Motor nameplate power (kW)")
         self.qline_power = QLineEdit("")
-        # self.qline_power.setValidator(self.real_number_validator)
+        self.power_validator = QDoubleValidator(self.qline_rpm)
+        self.power_validator.setRange(0, 100, 2)
+        self.qline_power.setValidator(self.power_validator)
 
         self.Label_amps = QLabel("Motor nameplate amps")
         self.qline_amps = QLineEdit("")
-        # self.qline_amps.setValidator(self.real_number_validator)
+        self.amps_validator = QDoubleValidator(self.qline_amps)
+        self.amps_validator.setRange(0, 100, 2)
+        self.qline_amps.setValidator(self.amps_validator)
 
         self.Label_frequency = QLabel("Motor nameplate frequency")
         self.qline_frequency = QLineEdit("")
-        # self.qline_frequency.setValidator(self.real_number_validator)
+        self.freq_validator = QIntValidator(self.qline_amps)
+        self.freq_validator.setRange(0, 99)
+        self.qline_frequency.setValidator(self.freq_validator)
 
         self.Label_poles = QLabel("Number of poles pairs")
         self.qline_poles = QLineEdit("")
-        # self.qline_poles.setValidator(self.real_number_validator)
+        self.pole_validator = QIntValidator(self.qline_amps)
+        self.pole_validator.setRange(0, 99)
+        self.qline_poles.setValidator(self.pole_validator)
 
         self.Label_rpm_result = QLabel("")
         self.Label_power_result = QLabel("")
@@ -81,7 +89,7 @@ class DeltaWindow(QWidget):
             "Amps: " + self.qline_amps.text() + " A")
 
         self.Label_frequency_result.setText(
-            "Frequency: " + CaclulateDeltaValues.multiple_by_sqr3(int(self.qline_frequency.text())) + " Hz")
+            "Frequency: " + CaclulateDeltaValues.multiple_by_sqr3(int(self.qline_frequency.text().replace(",", "."))) + " Hz")
 
         self.Label_power_result.setText(
-            "Power: " + CaclulateDeltaValues.multiple_by_sqr3(float(self.qline_power.text())) + " kW")
+            "Power: " + CaclulateDeltaValues.multiple_by_sqr3(float(self.qline_power.text().replace(",", "."))) + " kW")
