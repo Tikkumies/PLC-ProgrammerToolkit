@@ -14,7 +14,8 @@ class DeltaWindow(QWidget):
 
     # Creates widget objects
     def create_widget_objects(self):
-        self.label_title = QLabel("Give motor nameplate values")
+        self.label_title = QLabel("Give motor nameplate values\n(Delta 230V)")
+        self.label_title.setObjectName("DeltaGuiTitle")
 
         self.Label_rpm = QLabel("Motor nameplate rpm")
         self.qline_rpm = QLineEdit("")

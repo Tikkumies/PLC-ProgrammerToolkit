@@ -59,4 +59,8 @@ GLOBAL_STYLE = """
         color: #FFFFFF;
         font-size: 16px;
     }
+    QLabel#DeltaGuiTitle{
+        font-weight: bold;
+        font-size: 20px;
+    }
     """
