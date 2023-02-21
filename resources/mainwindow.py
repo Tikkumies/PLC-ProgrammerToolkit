@@ -20,7 +20,7 @@ class MainWindow(QMainWindow):
         self.menu = QMenuBar()
         self.setMenuBar(self.menu)
         file_menu = self.menu.addMenu("&View")
-        self.action_ip_view = QAction("&Ip changer", self)
+        self.action_ip_view = QAction("&IP changer", self)
         self.action_test_view = QAction("&Delta conversion", self)
         file_menu.addAction(self.action_ip_view)
         file_menu.addAction(self.action_test_view)
