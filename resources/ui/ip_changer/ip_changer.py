@@ -10,8 +10,8 @@ from .utils.handle_json import read_json, write_json
 
 class Window(QWidget):
     def __init__(self, diag):
-        self.diag = diag
         super().__init__()
+        self.diag = diag
         self.setObjectName("myParentWidget")
         self.setWindowTitle("IP Changer")
         self.create_widget_objects()

@@ -6,16 +6,18 @@ from .ui.styles import styles
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, ip_window, test_window):
+    def __init__(self, ip_window, delta_window, icon):
         super().__init__()
+        self.icon = icon
+        self.ip_window = ip_window
+        self.delta_window = delta_window
+        self.setWindowIcon(QIcon(self.icon))
         self.setObjectName("myParentWidget")
         self.setWindowTitle("IP changer")
-        self.ip_window = ip_window
-        self.test_window = test_window
         # create stacked widget
         self.stacked_widget = QStackedWidget()
         self.stacked_widget.addWidget(self.ip_window)
-        self.stacked_widget.addWidget(self.test_window)
+        self.stacked_widget.addWidget(self.delta_window)
         self.setCentralWidget(self.stacked_widget)
         # menubar
         self.menu = QMenuBar()

@@ -5,9 +5,10 @@ from PyQt5.QtGui import QIcon
 class Dialog(QDialog):
     def __init__(self, window_title, icon, message):
         super().__init__()
+        self.icon = icon
         self.setObjectName("myParentWidget")
         self.setWindowTitle(window_title)
-        self.setWindowIcon(QIcon(icon))
+        self.setWindowIcon(QIcon(self.icon))
 
         QBtn = QDialogButtonBox.Ok
 
