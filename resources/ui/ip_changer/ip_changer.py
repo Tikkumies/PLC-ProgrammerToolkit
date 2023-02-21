@@ -121,23 +121,3 @@ class Window(QWidget):
 
         except:
             self.diag.show()
-
-
-class Dialog(QDialog):
-    def __init__(self):
-        super().__init__()
-        self.setObjectName("myParentWidget")
-        self.setWindowTitle("Incorrect network settings")
-        self.setWindowIcon(QIcon("ip.PNG"))
-
-        QBtn = QDialogButtonBox.Ok
-
-        self.buttonBox = QDialogButtonBox(QBtn)
-        self.buttonBox.accepted.connect(self.accept)
-
-        self.layout = QVBoxLayout()
-        message = QLabel(
-            "Incorrect IP address, network mask or default gateway")
-        self.layout.addWidget(message)
-        self.layout.addWidget(self.buttonBox)
-        self.setLayout(self.layout)

@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow, QMenuBar, QAction, QStackedWidget
 from resources.ui.ip_changer.ip_changer import *
 from resources.ui.delta_conversion.delta_conversion import *
+from resources.ui.widgets.dialog import Dialog
 from .ui.styles import styles
 
 

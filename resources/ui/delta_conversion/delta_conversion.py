@@ -4,8 +4,9 @@ from .utils.calculate_delta_values import CaclulateDeltaValues
 
 
 class DeltaWindow(QWidget):
-    def __init__(self):
+    def __init__(self, diag):
         super().__init__()
+        self.diag = diag
         self.setObjectName("myParentWidget")
         self.create_widget_objects()
         self.create_layout()
@@ -83,14 +84,18 @@ class DeltaWindow(QWidget):
         self.setLayout(self.layout)
 
     def calculate_delta_values(self):
-        self.Label_rpm_result.setText("RPM: " + CaclulateDeltaValues.rpm(int(
-            self.qline_rpm.text()), int(self.qline_poles.text()), int(self.qline_frequency.text())))
+        try:
+            self.Label_rpm_result.setText("RPM: " + CaclulateDeltaValues.rpm(int(
+                self.qline_rpm.text()), int(self.qline_poles.text()), int(self.qline_frequency.text())))
 
-        self.Label_amps_result.setText(
-            "Amps: " + self.qline_amps.text() + " A")
+            self.Label_amps_result.setText(
+                "Amps: " + self.qline_amps.text() + " A")
 
-        self.Label_frequency_result.setText(
-            "Frequency: " + CaclulateDeltaValues.multiple_by_sqr3(int(self.qline_frequency.text().replace(",", "."))) + " Hz")
+            self.Label_frequency_result.setText(
+                "Frequency: " + CaclulateDeltaValues.multiple_by_sqr3(int(self.qline_frequency.text().replace(",", "."))) + " Hz")
 
-        self.Label_power_result.setText(
-            "Power: " + CaclulateDeltaValues.multiple_by_sqr3(float(self.qline_power.text().replace(",", "."))) + " kW")
+            self.Label_power_result.setText(
+                "Power: " + CaclulateDeltaValues.multiple_by_sqr3(float(self.qline_power.text().replace(",", "."))) + " kW")
+
+        except:
+            self.diag.show()

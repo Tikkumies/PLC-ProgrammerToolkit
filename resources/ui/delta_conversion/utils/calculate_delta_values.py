@@ -9,6 +9,5 @@ class CaclulateDeltaValues:
         return str(motor_rpm)
 
     def multiple_by_sqr3(power_or_frequency):
-        # Calculation for motor power and frequency
         result = round(math.sqrt(3) * power_or_frequency, 2)
         return str(result)
