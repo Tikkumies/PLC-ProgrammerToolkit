@@ -87,6 +87,7 @@ GLOBAL_STYLE = """
         background-color: transparent;
         font-size: 16px;
         padding: 6px;
+        width: 150px;
 
     }
 
