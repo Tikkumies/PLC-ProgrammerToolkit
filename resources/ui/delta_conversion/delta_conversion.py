@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QPushButton, QGridLayout
 from PyQt5.QtGui import QDoubleValidator, QIntValidator, QIcon
-from .utils.calculate_delta_values import CaclulateDeltaValues
+from ..utils.calculate_delta_values import CaclulateDeltaValues
 
 
 class DeltaWindow(QWidget):
