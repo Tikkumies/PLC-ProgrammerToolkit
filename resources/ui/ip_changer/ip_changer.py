@@ -4,8 +4,8 @@ from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget,
                              QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox)
 from PyQt5.QtGui import QIcon
 import os
-from ..utils.handle_ip import change_ip, get_network_adapter_data
-from ..utils.handle_json import read_json, write_json
+from ...utils.handle_ip import change_ip, get_network_adapter_data
+from ...utils.handle_json import read_json, write_json
 
 
 class Window(QWidget):
