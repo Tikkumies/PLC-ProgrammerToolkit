@@ -25,6 +25,13 @@ GLOBAL_STYLE = """
         background-color: #121212;
         color: #FFFFFF;
         }
+
+    QLabel#DeltaGuiTitle {
+        font-size: 20px;
+        border: 1px;
+        background-color: #121212;
+        color: #FFFFFF;
+        }
         
     QLineEdit{
         font-size: 16px;
@@ -58,8 +65,8 @@ GLOBAL_STYLE = """
     QMenuBar {
         font-size: 16px;
         color: #FFFFFF;
-        background-color: qlineargradient(x1:0, y1:0, x2:0, y2:0,
-                                        stop:0 #404040 , stop:1 #404040);
+        padding: 3px;
+        background-color: transparent;
         spacing: 3px;
     }
 
@@ -67,10 +74,11 @@ GLOBAL_STYLE = """
         padding: 1px 4px;
         background-color: #404040;
         border-radius: 4px;
+        padding: 7px
     }
 
     QMenuBar::item:selected {
-        background-color: #181818;
+        background-color: #282828;
     }
 
     QMenuBar::item:pressed {
