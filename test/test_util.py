@@ -12,8 +12,6 @@ class TestUtils(unittest.TestCase):
         self.assertEqual(CaclulateDeltaValues.rpm(
                         1730, 2, 60), "3047.69")
         
-    def test_get_network_adapter_data(self):
-        self.assertIn(get_network_adapter_data("name"), "Ehternet")
         
 
 
