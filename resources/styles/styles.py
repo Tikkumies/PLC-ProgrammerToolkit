@@ -104,4 +104,22 @@ GLOBAL_STYLE = """
         color: #FFFFFF;
         font-size: 16px;
     }
+
+    QCheckBox {
+
+    }
+
+    QCheckBox::indicator {
+        width: 35px;
+        height: 35px;
+    }
+
+    QCheckBox::indicator:unchecked {
+        image: url(resources/images/uncheck.png);
+    }
+
+    QCheckBox::indicator:checked {
+    image: url(resources/images/checked.png);
+    }
+
     """

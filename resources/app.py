@@ -24,4 +24,5 @@ def main():
     dialog_delta.setStyleSheet(styles.GLOBAL_STYLE)
     dialog_ip_changer.setStyleSheet(styles.GLOBAL_STYLE)
     dialog_capacity.setStyleSheet(styles.GLOBAL_STYLE)
+    open_programs_window.setStyleSheet(styles.GLOBAL_STYLE)
     sys.exit(app.exec_())
