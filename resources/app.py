@@ -14,8 +14,9 @@ def main():
     ip_window = Window(dialog_ip_changer)
     delta_window = DeltaWindow(dialog_delta)
     capacity_window = CapacityWindow(dialog_capacity)
+    open_programs_window = OpenPrograms()
     main_window = MainWindow(ip_window, delta_window,
-                             capacity_window,"resources/images/ip.PNG")
+                             capacity_window, open_programs_window, "resources/images/ip.PNG")
     main_window.show()
     ip_window.setStyleSheet(styles.GLOBAL_STYLE)
     delta_window.setStyleSheet(styles.GLOBAL_STYLE)

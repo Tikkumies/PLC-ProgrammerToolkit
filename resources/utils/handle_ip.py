@@ -55,3 +55,4 @@ def get_network_adapter_data(data):
             adapter_list.append(string[start:end])
             string = string[end:]
     return (adapter_list)
+
