@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QCheckBox, QPushButton, QGridLayout, QFileDialog, QLineEdit
-import threading
 from ...utils.open_program import open_program
 
 class OpenPrograms(QWidget):

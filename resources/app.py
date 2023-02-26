@@ -11,7 +11,7 @@ def main():
                           "Values missing from input fields. Check values and try again.")
     dialog_capacity = Dialog("Values missing", "resources/images/ip.PNG",
                         "Values missing from input fields. Check values and try again.")
-    ip_window = Window(dialog_ip_changer)
+    ip_window = Window(dialog_ip_changer, "resources/data/ip.json")
     delta_window = DeltaWindow(dialog_delta)
     capacity_window = CapacityWindow(dialog_capacity)
     open_programs_window = OpenPrograms()

@@ -9,9 +9,10 @@ from ...utils.handle_json import read_json, write_json
 
 
 class Window(QWidget):
-    def __init__(self, diag):
+    def __init__(self, diag, json_file):
         super().__init__()
         self.diag = diag
+        self.jsdon_file = json_file
         self.setObjectName("myParentWidget")
         self.setWindowTitle("IP Changer")
         self.create_widget_objects()
@@ -94,7 +95,7 @@ class Window(QWidget):
                                    self.qcombo_name.currentIndex()])
 
     def change_field_texts(self):
-        data = read_json("resources/file.json")
+        data = read_json(self.jsdon_file)
         self.qline_ip.setText(
             data[self.qcombo_preset.currentIndex()].get("IP"))
         self.qline_mask.setText(
@@ -108,7 +109,7 @@ class Window(QWidget):
             ipaddress.ip_address(self.qline_mask.text())
             ipaddress.ip_address(self.qline_gateway.text())
 
-            data = read_json("resources/file.json")
+            data = read_json(self.jsdon_file)
 
             data[self.qcombo_preset.currentIndex()].update(
                 {"IP": self.qline_ip.text()})
@@ -117,7 +118,7 @@ class Window(QWidget):
             data[self.qcombo_preset.currentIndex()].update(
                 {"Gateway": self.qline_gateway.text()})
 
-            write_json("resources/file.json", data)
+            write_json(self.jsdon_file, data)
 
         except:
             self.diag.show()
