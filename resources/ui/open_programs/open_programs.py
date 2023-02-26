@@ -1,13 +1,16 @@
 from PyQt5.QtWidgets import QWidget, QLabel, QCheckBox, QPushButton, QGridLayout, QFileDialog, QLineEdit
 from ...utils.open_program import open_program
+from ...utils.handle_json import write_json, read_json
 
 class OpenPrograms(QWidget):
-    def __init__(self):
+    def __init__(self, json_file):
         super().__init__()
         #self.diag = diag
+        self.json_file = json_file
         self.setObjectName("myParentWidget")
         self.create_widget_objects()
         self.create_layout()
+        self.read_json()
         self.file_dialog = QFileDialog()
 
         self.button_ix.clicked.connect(lambda: self.open_file_dialog(self.qline_ix))
@@ -15,6 +18,7 @@ class OpenPrograms(QWidget):
         self.button_vmware.clicked.connect(lambda: self.open_file_dialog(self.qline_vmware))
         self.button_connect.clicked.connect(lambda: self.open_file_dialog(self.qline_connect))
         self.button_open.clicked.connect(lambda: self.open_programs())
+        self.button_save.clicked.connect(lambda: self.update_json_file())
 
     # Creates widget objects
     def create_widget_objects(self):
@@ -44,6 +48,7 @@ class OpenPrograms(QWidget):
         self.label_placeholder = QLabel("")
 
         self.button_open = QPushButton("Open")
+        self.button_save = QPushButton("Save")
 
     def create_layout(self):
         self.layout = QGridLayout()
@@ -70,11 +75,11 @@ class OpenPrograms(QWidget):
         self.layout.addWidget(self.button_connect, 4, 3)
         self.layout.addWidget(self.qline_connect, 4, 2, 1, 1)
 
-        self.layout.addWidget(self.label_placeholder,6, 0)
-        self.layout.setRowStretch(5, 5)
+        self.layout.addWidget(self.button_open, 5, 0, 1, 4)
+        self.layout.addWidget(self.button_save, 6, 0, 1, 4)
 
-        self.layout.addWidget(self.button_open, 5, 0)
-        self.layout.setRowStretch(6, 5)
+        self.layout.addWidget(self.label_placeholder,7, 0)
+        self.layout.setRowStretch(8, 5)
 
         self.setLayout(self.layout)
 
@@ -91,6 +96,18 @@ class OpenPrograms(QWidget):
         if self.check_connect.checkState():
             open_program(self.qline_connect.text())
 
-    
+    def update_json_file(self):
+        data =  {"IX Developer": self.qline_ix.text(), 
+                 "Lenze Engineer" : self.qline_lenze.text(),
+                 "WMware" :self.qline_vmware.text(), 
+                 "Connect": self.qline_connect.text()}
+        write_json(self.json_file, data)
 
+    def read_json(self):
+        data = read_json(self.json_file)
+        self.qline_ix.setText(data.get("IX Developer"))
+        self.qline_lenze.setText(data.get("Lenze Engineer"))
+        self.qline_vmware.setText(data.get("WMware"))
+        self.qline_connect.setText(data.get("Connect"))
+        
         

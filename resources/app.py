@@ -14,7 +14,7 @@ def main():
     ip_window = Window(dialog_ip_changer, "resources/data/ip.json")
     delta_window = DeltaWindow(dialog_delta)
     capacity_window = CapacityWindow(dialog_capacity)
-    open_programs_window = OpenPrograms()
+    open_programs_window = OpenPrograms("resources/data/program_paths.json")
     main_window = MainWindow(ip_window, delta_window,
                              capacity_window, open_programs_window, "resources/images/ip.PNG")
     main_window.show()
