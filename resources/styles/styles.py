@@ -105,13 +105,9 @@ GLOBAL_STYLE = """
         font-size: 16px;
     }
 
-    QCheckBox {
-
-    }
-
     QCheckBox::indicator {
-        width: 35px;
-        height: 35px;
+        width: 30px;
+        height: 30px;
     }
 
     QCheckBox::indicator:unchecked {
