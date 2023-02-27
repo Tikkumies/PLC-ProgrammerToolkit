@@ -87,14 +87,15 @@ class OpenPrograms(QWidget):
         line_edit_text.setText(self.file_dialog.getOpenFileName()[0])
 
     def open_programs(self):
-        if self.check_ix.checkState():
+        if self.check_ix.checkState() and self.qline_ix.text() != "":
             open_program(self.qline_ix.text())
-        if self.check_lenze.checkState():
+        if self.check_lenze.checkState() and self.qline_lenze.text() != "":
             open_program(self.qline_lenze.text())
-        if self.check_vmware.checkState():
+        if self.check_vmware.checkState() and self.qline_vmware.text() != "":
             open_program(self.qline_vmware.text())
-        if self.check_connect.checkState():
+        if self.check_connect.checkState() and self.qline_connect.text() != "":
             open_program(self.qline_connect.text())
+            
 
     def update_json_file(self):
         data =  {"IX Developer": self.qline_ix.text(), 
