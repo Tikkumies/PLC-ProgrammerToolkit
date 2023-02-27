@@ -95,7 +95,8 @@ class OpenPrograms(QWidget):
             open_program(self.qline_vmware.text())
         if self.check_connect.checkState() and self.qline_connect.text() != "":
             open_program(self.qline_connect.text())
-            
+
+
 
     def update_json_file(self):
         data =  {"IX Developer": self.qline_ix.text(), 

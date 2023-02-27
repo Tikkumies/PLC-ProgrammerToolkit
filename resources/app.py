@@ -15,8 +15,9 @@ def main():
     delta_window = DeltaWindow(dialog_delta)
     capacity_window = CapacityWindow(dialog_capacity)
     open_programs_window = OpenPrograms("resources/data/program_paths.json")
+    copy_files_window = CopyFiles("resources/data/copy.json")
     main_window = MainWindow(ip_window, delta_window,
-                             capacity_window, open_programs_window, "resources/images/ip.PNG")
+                             capacity_window, open_programs_window, copy_files_window, "resources/images/ip.PNG")
     main_window.show()
     ip_window.setStyleSheet(styles.GLOBAL_STYLE)
     delta_window.setStyleSheet(styles.GLOBAL_STYLE)
