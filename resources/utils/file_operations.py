@@ -14,8 +14,8 @@ class FileOperations:
 if __name__ == "__main__":
     dir_path = r"C:\Users\Mikko\Documents\hakutesti\ITW-haloila"
     destination = r"C:\Users\Mikko\Desktop\\"
-    fill_path = FileOperations.find_path("510445", dir_path)
-    shutil.copyfile(fill_path, (destination + "510445.pdf"))
+    file_path = FileOperations.find_path("510445", dir_path)
+    shutil.copyfile(file_path, (destination + "510445.pdf"))
 
 
 

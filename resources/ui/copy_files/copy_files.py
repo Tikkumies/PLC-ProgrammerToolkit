@@ -13,7 +13,7 @@ class CopyFiles(QWidget):
         self.create_layout()
 
         self.button_electrical_src.clicked.connect(lambda: self.open_file_dialog(self.qline_electrical_src))
-        self.button_electrical_dest.clicked.connect(lambda: self.open_file_dialog(self.qline_electrical_dest))
+        self.button_electrical_dest.clicked.connect(lambda: self.open_directory_dialog(self.qline_electrical_dest))
         self.button_copy.clicked.connect(lambda: self.copy_file())
 
     # Creates widget objects
@@ -21,6 +21,7 @@ class CopyFiles(QWidget):
         self.label_title = QLabel("Copy files")
         self.label_title.setObjectName("DeltaGuiTitle")
         self.file_dialog = QFileDialog()
+        self.directory_dialog = QFileDialog()
 
         self.Label_electrical = QLabel("Elec drawings")
         self.check_electrical = QCheckBox()
@@ -41,7 +42,7 @@ class CopyFiles(QWidget):
         self.layout.addWidget(self.Label_electrical, 1, 0)
         #self.layout.addWidget(self.check_electrical, 1, 1)
         self.layout.addWidget(self.qline_electrical_src, 1, 2)
-        self.layout.addWidget(self.button_electrical_src, 1, 3)
+        #self.layout.addWidget(self.button_electrical_src, 1, 3)
         self.layout.addWidget(self.qline_electrical_dest, 2, 2)
         self.layout.addWidget(self.button_electrical_dest, 2, 3)
         self.layout.addWidget(self.button_copy, 3, 1, 1, 2)
@@ -52,13 +53,15 @@ class CopyFiles(QWidget):
         self.setLayout(self.layout)
 
     def open_file_dialog(self, line_edit_text):
-        line_edit_text.setText(self.file_dialog.getOpenFileName()[0])
+        line_edit_text.setText(self.file_dialog.getOpenFileName(self, "Select file")[0])
+
+    def open_directory_dialog(self, line_edit_text):
+        line_edit_text.setText(self.directory_dialog.getExistingDirectory(self, "Select directory"))
 
     def copy_file(self):
         dir_path = r"C:\Users\Mikko\Documents\hakutesti\ITW-haloila"
         destination = r"C:\Users\Mikko\Documents\hakutesti\\"
         file_path = FileOperations.find_path(self.qline_electrical_src.text(), dir_path)
-        print(destination + self.qline_electrical_src.text() + ".pdf")
         shutil.copyfile(file_path, (destination + self.qline_electrical_src.text() + ".pdf"))
 
 '''
