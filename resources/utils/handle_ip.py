@@ -9,6 +9,7 @@ class IpFunctions:
             if mode == "static":
                 command = "netsh interface ip set address " + name + \
                     " static " + ip + " " + mask + " " + gateway
+                print(command)
                 # Check for valid IP address
                 ipaddress.ip_address(ip)
                 ipaddress.ip_address(mask)
@@ -31,28 +32,31 @@ class IpFunctions:
         return string
     
     @staticmethod
-    def get_network_adapter_data(data, string):
-        match data:
+    def get_network_adapter_data(data_to_search, string):
+        match data_to_search:
             case "name":
-                find_start = "Ethernet adapter "
-                find_end = ":"
+                start = "Ethernet adapter "
             case "ip":
-                find_start = "IPv4 Address. . . . . . . . . . . : "
-                find_end = " "
+                start = "IPv4 Address"
             case "mask":
-                find_start = "Subnet Mask . . . . . . . . . . . : "
-                find_end = " "
+                start = "Subnet Mask"
             case "gateway":
-                find_start = "Default Gateway . . . . . . . . . : "
-                find_end = " "
-            case "all":
-                pass
+                start = "Default Gateway"
 
         adapter_list = []
-        while (string.find(find_start)) != -1:
-            start = string.find(find_start) + len(find_start)
-            end = string.find(find_end, start)
-            adapter_list.append(string[start:end])
-            string = string[end:]
+
+        while string.find(start) != -1:
+            split_start = string.partition(start)
+            split_colon = split_start[2].partition(": ")
+            adapter_data = split_colon[2].partition(" ")
+            if data_to_search == "name":
+                adapter_list.append(split_colon[0])
+                string = split_colon[2]
+            else:
+                adapter_list.append(adapter_data[0])
+                string = adapter_data[2]
         return (adapter_list)
+    
+if __name__ == "__main__":
+    IpFunctions.get_network_adapter_data("name", IpFunctions.get_text_from_command_line())
 
