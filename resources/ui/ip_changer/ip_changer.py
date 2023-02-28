@@ -4,7 +4,7 @@ from PyQt5.QtWidgets import (QApplication, QPushButton, QGridLayout, QWidget,
                              QLineEdit, QLabel, QDialog, QDialogButtonBox, QVBoxLayout, QComboBox)
 from PyQt5.QtGui import QIcon
 import os
-from ...utils.handle_ip import change_ip, get_network_adapter_data
+from ...utils.handle_ip import IpFunctions
 from ...utils.handle_json import read_json, write_json
 
 
@@ -16,22 +16,23 @@ class Window(QWidget):
         self.setObjectName("myParentWidget")
         self.setWindowTitle("IP Changer")
         self.create_widget_objects()
-        self.change_field_texts()
+        self.update_field_texts_from_file()
         self.create_layout()
 
-        self.button_change_static.clicked.connect(lambda: change_ip("static", self.qcombo_name.currentText(), self.qline_ip.text(),
+        self.button_change_static.clicked.connect(lambda: IpFunctions.change_ip("static", self.qcombo_name.currentText(), self.qline_ip.text(),
                                                                     self.qline_mask.text(), self.qline_gateway.text(), self.diag))
         self.button_change_dhcp.clicked.connect(
-            lambda: change_ip("dhcp", self.qcombo_name.currentText()))
+            lambda: IpFunctions.change_ip("dhcp", self.qcombo_name.currentText()))
         self.button_get_current_ip.clicked.connect(
             lambda: self.update_fields_to_current())
         self.qcombo_preset.currentTextChanged.connect(
-            lambda: self.change_field_texts())
+            lambda: self.update_field_texts_from_file())
         self.button_save_presets.clicked.connect(
             lambda: self.update_json_file())
 
     # Creates widget objects
     def create_widget_objects(self):
+        text = IpFunctions.get_text_from_command_line()
         self.Label_preset = QLabel("Preset")
         self.qcombo_preset = QComboBox(self)
         for preset_number in range(1, 6):
@@ -39,20 +40,20 @@ class Window(QWidget):
 
         self.Label_name = QLabel("Network name")
         self.qcombo_name = QComboBox(self)
-        adapters = get_network_adapter_data("name")
+        adapters = IpFunctions.get_network_adapter_data("name", text)
         for adapter in adapters:
             self.qcombo_name.addItem(adapter)
 
         self.Label_ip = QLabel("IP address")
-        self.qline_ip = QLineEdit(get_network_adapter_data("ip")[
+        self.qline_ip = QLineEdit(IpFunctions.get_network_adapter_data("ip", text)[
                                   self.qcombo_name.currentIndex()])
 
         self.Label_mask = QLabel("Subnet mask")
-        self.qline_mask = QLineEdit(get_network_adapter_data("mask")[
+        self.qline_mask = QLineEdit(IpFunctions.get_network_adapter_data("mask", text)[
                                     self.qcombo_name.currentIndex()])
 
         self.Label_gateway = QLabel("Default gateway")
-        self.qline_gateway = QLineEdit(get_network_adapter_data("gateway")[
+        self.qline_gateway = QLineEdit(IpFunctions.get_network_adapter_data("gateway", text)[
                                        self.qcombo_name.currentIndex()])
 
         self.button_change_static = QPushButton("Set static IP")
@@ -87,17 +88,18 @@ class Window(QWidget):
         self.setLayout(self.layout)
 
     def update_fields_to_current(self):
-        self.qline_ip.setText(get_network_adapter_data("ip")[
+        text = IpFunctions.get_text_from_command_line()
+        self.qline_ip.setText(IpFunctions.get_network_adapter_data("ip", text)[
                               self.qcombo_name.currentIndex()])
-        self.qline_mask.setText(get_network_adapter_data("mask")[
+        self.qline_mask.setText(IpFunctions.get_network_adapter_data("mask", text)[
                                 self.qcombo_name.currentIndex()])
-        self.qline_gateway.setText(get_network_adapter_data("gateway")[
+        self.qline_gateway.setText(IpFunctions.get_network_adapter_data("gateway", text)[
                                    self.qcombo_name.currentIndex()])
 
-    def change_field_texts(self):
+    def update_field_texts_from_file(self):
         data = read_json(self.jsdon_file)
         self.qline_ip.setText(
-            data[self.qcombo_preset.currentIndex()].get("IP", self.qcombo_name.currentText()))
+            data[self.qcombo_preset.currentIndex()].get("IP"))
         self.qline_mask.setText(
             data[self.qcombo_preset.currentIndex()].get("Mask"))
         self.qline_gateway.setText(
