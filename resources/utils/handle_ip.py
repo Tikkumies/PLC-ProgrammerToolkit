@@ -2,6 +2,7 @@ import ipaddress
 import subprocess
 
 class IpFunctions:
+    @staticmethod
     def change_ip(mode, name="", ip="", mask="", gateway="", diag_window=""):
         command = ""
         try:
@@ -21,13 +22,15 @@ class IpFunctions:
         except ValueError:
             diag_window.show()
 
+    @staticmethod
     def get_text_from_command_line():
         command = "ipconfig"
         completed_process = (subprocess.run(command, capture_output=True))
         string = str(completed_process.stdout).replace(
             "\\n", " ").replace("\\r", " ")
         return string
-
+    
+    @staticmethod
     def get_network_adapter_data(data, string, adapter_name = "", ):
         match data:
             case "name":
