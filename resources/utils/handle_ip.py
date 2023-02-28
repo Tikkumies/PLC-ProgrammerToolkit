@@ -31,7 +31,7 @@ class IpFunctions:
         return string
     
     @staticmethod
-    def get_network_adapter_data(data, string, adapter_name = "", ):
+    def get_network_adapter_data(data, string):
         match data:
             case "name":
                 find_start = "Ethernet adapter "
