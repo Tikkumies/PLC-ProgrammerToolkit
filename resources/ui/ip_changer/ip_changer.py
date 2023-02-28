@@ -97,7 +97,7 @@ class Window(QWidget):
     def change_field_texts(self):
         data = read_json(self.jsdon_file)
         self.qline_ip.setText(
-            data[self.qcombo_preset.currentIndex()].get("IP"))
+            data[self.qcombo_preset.currentIndex()].get("IP", self.qcombo_name.currentText()))
         self.qline_mask.setText(
             data[self.qcombo_preset.currentIndex()].get("Mask"))
         self.qline_gateway.setText(

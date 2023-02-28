@@ -22,10 +22,10 @@ def change_ip(mode, name="", ip="", mask="", gateway="", diag_window=""):
         diag_window.show()
 
 
-def get_network_adapter_data(data):
+def get_network_adapter_data(data, adapter_name = ""):
     match data:
         case "name":
-            find_start = "Ethernet adapter "
+            find_start = "Ethernet adapter " + adapter_name
             find_end = ":"
         case "ip":
             find_start = "IPv4 Address. . . . . . . . . . . : "
