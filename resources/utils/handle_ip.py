@@ -44,15 +44,10 @@ def get_network_adapter_data(data, adapter_name = ""):
     string = str(completed_process.stdout).replace(
         "\\n", " ").replace("\\r", " ")
     adapter_list = []
-    x = True
-    while x == True:
+    while (string.find(find_start)) != -1:
         start = string.find(find_start) + len(find_start)
         end = string.find(find_end, start)
-
-        if string.find(find_start) == -1:
-            x = False
-        else:
-            adapter_list.append(string[start:end])
-            string = string[end:]
+        adapter_list.append(string[start:end])
+        string = string[end:]
     return (adapter_list)
 
