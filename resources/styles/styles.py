@@ -36,20 +36,20 @@ GLOBAL_STYLE = """
     QLineEdit{
         font-size: 16px;
         border-radius: 5;
-        border: 1px;
+        border: 5px inset #282828;
         background-color: #404040;
         color: #FFFFFF;
-        padding: 5px;
+        padding: 2px;
         selection-background-color: #121212;
 
     }
     QComboBox{
         font-size: 16px;
         border-radius: 5;
-        border: 1px;
+        border: 5px inset #282828;
         background-color: #404040;
         color: #FFFFFF;
-        padding: 5px;
+        padding: 2px;
         }
 
     QComboBox QAbstractItemView {

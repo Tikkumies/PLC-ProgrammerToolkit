@@ -1,68 +1,101 @@
-from PyQt5.QtWidgets import QWidget, QLabel, QCheckBox, QPushButton, QGridLayout, QFileDialog, QLineEdit
+from PyQt5.QtWidgets import QWidget, QLabel, QCheckBox, QPushButton, QGridLayout, QFileDialog, QLineEdit, QComboBox
 import shutil
 from ...utils.file_operations import FileOperations
 from ...utils.handle_json import write_json, read_json
 
 class CopyFiles(QWidget):
-    def __init__(self, json_file):
+    def __init__(self, json_file, diag):
         super().__init__()
-        #self.diag = diag
         self.json_file = json_file
+        self.diag = diag
+        self.list_plc = ["Octopus Siemens", "Octopus AB", "Compact", "Compact AB"]
+        self.list_hmi = ["Octoface 2.0", "PanelView","Compact 20/TSI", "Compact PanelView"]
+        self.list_filmfeeding = ["Octopus Siemens", "Octopus AB","Octopus Siemens Twin", "Octopus AB Twin",
+                                  "Octopus AB", "Compact", "Compact AB"]
+        self.path_to_saving_folder = r"C:\Users\makelamm\Documents\Koneet\\"
         self.setObjectName("myParentWidget")
         self.create_widget_objects()
         self.create_layout()
 
-        self.button_electrical_src.clicked.connect(lambda: self.open_file_dialog(self.qline_electrical_src))
-        self.button_electrical_dest.clicked.connect(lambda: self.open_directory_dialog(self.qline_electrical_dest))
+
         self.button_copy.clicked.connect(lambda: self.copy_file())
 
     # Creates widget objects
     def create_widget_objects(self):
-        self.label_title = QLabel("Copy files")
-        self.label_title.setObjectName("DeltaGuiTitle")
         self.file_dialog = QFileDialog()
         self.directory_dialog = QFileDialog()
 
-        self.Label_electrical = QLabel("Elec drawings")
-        self.check_electrical = QCheckBox()
-        self.button_electrical_src = QPushButton("...")
-        self.qline_electrical_src = QLineEdit("")
-        self.button_electrical_dest = QPushButton("...")
-        self.qline_electrical_dest = QLineEdit("")
+        self.label_create_folder = QLabel("Create project folder")
+        self.label_machine_number_create_folder = QLabel("Machine number")
+        self.qline_machine_number_create_folder = QLineEdit("")
+        self.qline_machine_number_create_folder.setPlaceholderText("Machine number")
+        self.label_path_to_create_folder = QLabel("Path to folder")
+        self.qline_path_to_create_folder = QLineEdit(self.path_to_saving_folder)
+        self.button_create_folder_path = QPushButton("...")
+        self.button_create_folder = QPushButton("Create folder")
 
+        self.label_copy_files = QLabel("Copy files")
+        self.label_electrical_drawings = QLabel("Electrical drawings")
+        self.qline_electrical_drawings_machine_number = QLineEdit("")
+        self.qline_electrical_drawings_machine_number.setPlaceholderText("Machine number")
+        self.check_electrical_drawings = QCheckBox(self)
 
-        self.label_placeholder = QLabel("")
+        self.label_plc = QLabel("PLC")
+        self.combo_plc = QComboBox(self)
+        self.combo_plc.addItems(self.list_plc)
+        self.check_plc = QCheckBox(self)
 
-        self.button_copy = QPushButton("Copy")
+        self.label_hmi = QLabel("HMI")
+        self.combo_hmi = QComboBox(self)
+        self.combo_hmi.addItems(self.list_hmi)
+        self.check_hmi = QCheckBox(self)
+
+        self.label_motec = QLabel("Film feeding")
+        self.combo_motec = QComboBox(self)
+        self.combo_motec.addItems(self.list_filmfeeding)
+        self.check_motec = QCheckBox(self)
+        
+        self.button_copy = QPushButton("Copy selected files")
 
     def create_layout(self):
         self.layout = QGridLayout()
 
-        self.layout.addWidget(self.label_title, 0, 0)
-        self.layout.addWidget(self.Label_electrical, 1, 0)
-        #self.layout.addWidget(self.check_electrical, 1, 1)
-        self.layout.addWidget(self.qline_electrical_src, 1, 2)
-        #self.layout.addWidget(self.button_electrical_src, 1, 3)
-        self.layout.addWidget(self.qline_electrical_dest, 2, 2)
-        self.layout.addWidget(self.button_electrical_dest, 2, 3)
-        self.layout.addWidget(self.button_copy, 3, 1, 1, 2)
+        self.layout.addWidget(self.label_create_folder, 0, 0)
+        self.layout.addWidget(self.label_machine_number_create_folder, 1, 0)
+        self.layout.addWidget(self.qline_machine_number_create_folder, 2, 0)
+        self.layout.addWidget(self.label_path_to_create_folder, 1, 1)
+        self.layout.addWidget(self.qline_path_to_create_folder, 2, 1)
+        self.layout.addWidget(self.button_create_folder_path, 2, 2)
+        self.layout.addWidget(self.label_copy_files, 3, 0)
+        self.layout.addWidget(self.label_electrical_drawings, 4, 0)
+        self.layout.addWidget(self.qline_electrical_drawings_machine_number, 4, 1)
+        self.layout.addWidget(self.check_electrical_drawings, 4, 2)
+       
+        self.layout.addWidget(self.label_plc, 5, 0)
+        self.layout.addWidget(self.combo_plc, 5, 1)
+        self.layout.addWidget(self.check_plc, 5, 2)
 
-        self.layout.addWidget(self.label_placeholder, 7, 0)
-        self.layout.setRowStretch(8, 5)
+        self.layout.addWidget(self.label_hmi, 6, 0)
+        self.layout.addWidget(self.combo_hmi, 6, 1)
+        self.layout.addWidget(self.check_hmi, 6, 2)
+
+        self.layout.addWidget(self.label_motec, 7, 0)
+        self.layout.addWidget(self.combo_motec, 7, 1)
+        self.layout.addWidget(self.check_motec, 7, 2)
+        self.layout.addWidget(self.button_copy, 8, 0, 1, 3)
 
         self.setLayout(self.layout)
 
-    def open_file_dialog(self, line_edit_text):
-        line_edit_text.setText(self.file_dialog.getOpenFileName(self, "Select file")[0])
 
-    def open_directory_dialog(self, line_edit_text):
-        line_edit_text.setText(self.directory_dialog.getExistingDirectory(self, "Select directory"))
 
     def copy_file(self):
-        dir_path = r"C:\Users\Mikko\Documents\hakutesti\ITW-haloila"
-        destination = r"C:\Users\Mikko\Documents\hakutesti\\"
-        file_path = FileOperations.find_path(self.qline_electrical_src.text(), dir_path)
-        shutil.copyfile(file_path, (destination + self.qline_electrical_src.text() + ".pdf"))
+        dir_path = r"\\FSRV05\Public$\Pdf\pdfEl\ITW Haloila"
+        destination = r"C:\Users\makelamm\Documents\Koneet\\"
+        try:
+            file_path, file_name = FileOperations.find_path(self.qline_electrical_src.text(), dir_path)
+            shutil.copyfile(file_path, (destination + file_name))
+        except:
+            self.diag.show()
 
 '''
     def update_json_file(self):
