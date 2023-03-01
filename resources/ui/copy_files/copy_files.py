@@ -12,6 +12,7 @@ class CopyFiles(QWidget):
         self.list_hmi = ["Octoface 2.0", "PanelView","Compact 20/TSI", "Compact PanelView"]
         self.list_filmfeeding = ["Octopus Siemens", "Octopus AB","Octopus Siemens Twin", "Octopus AB Twin",
                                   "Octopus AB", "Compact", "Compact AB"]
+        self.list_vfd = ["1845S", "1850T"]
         self.path_to_saving_folder = r"C:\Users\makelamm\Documents\Koneet\\"
         self.setObjectName("myParentWidget")
         self.create_widget_objects()
@@ -54,8 +55,15 @@ class CopyFiles(QWidget):
         self.combo_motec = QComboBox(self)
         self.combo_motec.addItems(self.list_filmfeeding)
         self.check_motec = QCheckBox(self)
+
+        self.label_vfd = QLabel("VFD")
+        self.combo_vfd = QComboBox(self)
+        self.combo_vfd.addItems(self.list_vfd)
+        self.check_vfd = QCheckBox(self)
         
         self.button_copy = QPushButton("Copy selected files")
+
+        self.placeholder = QLabel("")
 
     def create_layout(self):
         self.layout = QGridLayout()
@@ -82,8 +90,14 @@ class CopyFiles(QWidget):
         self.layout.addWidget(self.label_motec, 7, 0)
         self.layout.addWidget(self.combo_motec, 7, 1)
         self.layout.addWidget(self.check_motec, 7, 2)
-        self.layout.addWidget(self.button_copy, 8, 0, 1, 3)
 
+        self.layout.addWidget(self.label_vfd, 8, 0)
+        self.layout.addWidget(self.combo_vfd, 8, 1)
+        self.layout.addWidget(self.check_vfd, 8, 2)
+
+        self.layout.addWidget(self.button_copy, 9, 0, 1, 3)
+        self.layout.addWidget(self.placeholder, 10, 2)
+        self.layout.setRowStretch(10, 5)
         self.setLayout(self.layout)
 
 
