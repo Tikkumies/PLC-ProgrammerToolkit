@@ -27,6 +27,7 @@ class CopyFiles(QWidget):
         self.directory_dialog = QFileDialog()
 
         self.label_create_folder = QLabel("Create project folder")
+        self.label_create_folder.setObjectName("DeltaGuiTitle")
         self.label_machine_number_create_folder = QLabel("Machine number")
         self.qline_machine_number_create_folder = QLineEdit("")
         self.qline_machine_number_create_folder.setPlaceholderText("Machine number")
@@ -36,6 +37,7 @@ class CopyFiles(QWidget):
         self.button_create_folder = QPushButton("Create folder")
 
         self.label_copy_files = QLabel("Copy files")
+        self.label_copy_files.setObjectName("DeltaGuiTitle")
         self.label_electrical_drawings = QLabel("Electrical drawings")
         self.qline_electrical_drawings_machine_number = QLineEdit("")
         self.qline_electrical_drawings_machine_number.setPlaceholderText("Machine number")
