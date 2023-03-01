@@ -8,18 +8,21 @@ class CopyFiles(QWidget):
         super().__init__()
         self.json_file = json_file
         self.diag = diag
-        self.list_plc = ["Octopus Siemens", "Octopus AB", "Compact", "Compact AB"]
-        self.list_hmi = ["Octoface 2.0", "PanelView","Compact 20/TSI", "Compact PanelView"]
-        self.list_filmfeeding = ["Octopus Siemens", "Octopus AB","Octopus Siemens Twin", "Octopus AB Twin",
-                                  "Octopus AB", "Compact", "Compact AB"]
-        self.list_vfd = ["1845S", "1850T"]
-        self.path_to_saving_folder = r"C:\Users\makelamm\Documents\Koneet\\"
+        self.dict_plc = {"Octopus Siemens": ["path", "file externsion"], "Octopus AB": [r"C:\Users\Mikko\Documents\hakutesti\softakansio", "ACD"], "Compact": ["path", "file externsion"], "Compact AB": ["path", "file externsion"]}
+        self.dict_hmi = {"Octoface 2.0": ["path", "file externsion"], "PanelView": ["path", "file externsion"],"Compact 20/TSI": ["path", "file externsion"],
+                          "Compact PanelView": "path"}
+        self.dict_filmfeeding = {"Octopus Siemens": ["path", "file externsion"], "Octopus AB": ["path", "file externsion"],"Octopus Siemens Twin": ["path", "file externsion"], 
+                                 "Octopus AB Twin": ["path", "file externsion"],"Octopus AB": ["path", "file externsion"], "Compact": ["path", "file externsion"], "Compact AB": ["path", "file externsion"]}
+        self.dict_vfd ={"1845S": ["path", "file externsion"], "1850T": ["path", "file externsion"]}
+        self.destination_folder = r"C:\Users\Mikko\Documents\hakutesti\\"
         self.setObjectName("myParentWidget")
         self.create_widget_objects()
         self.create_layout()
 
 
-        self.button_copy.clicked.connect(lambda: self.copy_file())
+        self.button_copy.clicked.connect(lambda: self.copy_file( [self.check_plc, self.check_hmi, self.check_motec, self.check_vfd],
+                                                                [self.combo_plc, self.combo_hmi, self.combo_motec, self.combo_vfd],
+                                                                [self.dict_plc, self.dict_hmi, self.dict_filmfeeding, self.dict_vfd]))
 
     # Creates widget objects
     def create_widget_objects(self):
@@ -32,7 +35,7 @@ class CopyFiles(QWidget):
         self.qline_machine_number_create_folder = QLineEdit("")
         self.qline_machine_number_create_folder.setPlaceholderText("Machine number")
         self.label_path_to_create_folder = QLabel("Path to folder")
-        self.qline_path_to_create_folder = QLineEdit(self.path_to_saving_folder)
+        self.qline_path_to_create_folder = QLineEdit(self.destination_folder)
         self.button_create_folder_path = QPushButton("...")
         self.button_create_folder = QPushButton("Create folder")
 
@@ -45,22 +48,22 @@ class CopyFiles(QWidget):
 
         self.label_plc = QLabel("PLC")
         self.combo_plc = QComboBox(self)
-        self.combo_plc.addItems(self.list_plc)
+        self.combo_plc.addItems(list(self.dict_plc.keys()))
         self.check_plc = QCheckBox(self)
 
         self.label_hmi = QLabel("HMI")
         self.combo_hmi = QComboBox(self)
-        self.combo_hmi.addItems(self.list_hmi)
+        self.combo_hmi.addItems(list(self.dict_hmi.keys()))
         self.check_hmi = QCheckBox(self)
 
         self.label_motec = QLabel("Film feeding")
         self.combo_motec = QComboBox(self)
-        self.combo_motec.addItems(self.list_filmfeeding)
+        self.combo_motec.addItems(list(self.dict_filmfeeding.keys()))
         self.check_motec = QCheckBox(self)
 
         self.label_vfd = QLabel("VFD")
         self.combo_vfd = QComboBox(self)
-        self.combo_vfd.addItems(self.list_vfd)
+        self.combo_vfd.addItems(list(self.dict_vfd.keys()))
         self.check_vfd = QCheckBox(self)
         
         self.button_copy = QPushButton("Copy selected files")
@@ -104,14 +107,16 @@ class CopyFiles(QWidget):
 
 
 
-    def copy_file(self):
-        dir_path = r"\\FSRV05\Public$\Pdf\pdfEl\ITW Haloila"
-        destination = r"C:\Users\makelamm\Documents\Koneet\\"
-        try:
-            file_path, file_name = FileOperations.find_path(self.qline_electrical_src.text(), dir_path)
-            shutil.copyfile(file_path, (destination + file_name))
-        except:
-            self.diag.show()
+    def copy_file(self, check_box_list, combo_box_list, data_dictionary_list):
+        for (check_box, combo_box, data_dictionary) in zip(check_box_list, combo_box_list, data_dictionary_list):
+           if check_box.isChecked():
+                list_from_directory = data_dictionary.get(combo_box.currentText())
+                dir_path = list_from_directory[0]
+                try:
+                    file_path, file_name = FileOperations.find_path(list_from_directory[1], dir_path)
+                    shutil.copyfile(file_path, (self.destination_folder + file_name))
+                except:
+                    self.diag.show()
 
 '''
     def update_json_file(self):
